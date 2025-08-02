@@ -1,6 +1,6 @@
 repeat task.wait() until game:IsLoaded();
 
-if getgenv().vs_code_extension or getgenv().vs_code_ws then
+if getgenv().vs_code_ws then
 
 	if vs_code_extension.DebugMode then warn("[ WEB_SOCKET ]: Web socket already connected."); end;
 	return;
@@ -42,5 +42,6 @@ end;
 local __s, __d = pcall(function()
 	connect_ws();
 end);
+
 
 if vs_code_extension.DebugMode and not __s then warn("[ WEB_SOCKET ]: " .. tostring(__d)); end;
