@@ -36,6 +36,7 @@ local connect_ws = function()
 		connect_ws();
 	end);
 
+    if not vs_code_extension.AutoReconnect then queue_on_teleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/luna-xyz/vs-code-roblox-execution/refs/heads/main/main.lua'))();"); end;
 	if vs_code_extension.DebugMode then warn("[ WEB_SOCKET ]: Web socket connected."); end;
 end;
 
@@ -43,5 +44,19 @@ local __s, __d = pcall(function()
 	connect_ws();
 end);
 
+if vs_code_extension.DebugMode and not __s then
 
-if vs_code_extension.DebugMode and not __s then warn("[ WEB_SOCKET ]: " .. tostring(__d)); end;
+	coroutine.resume(coroutine.create(function()
+
+		while task.wait(3) and not vs_code_ws and vs_code_extension.AutoReconnect do
+
+			local __s, __d = pcall(function()
+				connect_ws();
+			end);
+			
+			if vs_code_extension.DebugMode and not __s then warn("[ WEB_SOCKET ]: " .. tostring(__d)); end;
+		end;
+	end));
+	
+	warn("[ WEB_SOCKET ]: " .. tostring(__d));
+end;
